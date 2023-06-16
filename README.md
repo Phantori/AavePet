@@ -1,6 +1,7 @@
 ![Dogo4x4.jpg](https://github.com/Phantori/AavePet/blob/main/Dogo4x4.jpg?raw=true)
 
 # AavePet
+
 AavePet is a groundbreaking decentralized finance (DeFi) application built on the Aave ecosystem that aims to revolutionize the way people invest in the health and well-being of their beloved pets.
 
 
@@ -8,27 +9,27 @@ AavePet is a groundbreaking decentralized finance (DeFi) application built on th
 
 # Abstract:
 
-  AavePet is an innovative decentralized finance (DeFi) application built on the Aave ecosystem, aiming to revolutionize pet care by providing a dedicated blockchain and cryptocurrency solution. The platform enables pet owners to invest in their pets' health while leveraging the benefits of DeFi. Additionally, AavePet introduces a unique pet NFT marketplace where users can create and sell NFTs of their pets to raise funds. This white paper outlines the AavePet ecosystem, its underlying technology, benefits, and introduces the Pet NFT Marketplace within its comprehensive roadmap.
+AavePet is an innovative decentralized finance (DeFi) application built on the Aave ecosystem, aiming to revolutionize pet care by providing a dedicated blockchain and cryptocurrency solution. The platform enables pet owners to invest in their pets' health while leveraging the benefits of DeFi. Additionally, AavePet introduces a unique pet NFT marketplace where users can create and sell NFTs of their pets to raise funds. This white paper outlines the AavePet ecosystem, its underlying technology, benefits, and introduces the Pet NFT Marketplace within its comprehensive roadmap.
 
 # Introduction
 
-    The bond between humans and their pets is cherished globally, and AavePet recognizes the importance of providing optimal care for beloved companions. This white paper introduces AavePet, a decentralized platform that integrates blockchain technology, DeFi principles, and a Pet NFT Marketplace to revolutionize pet care and fundraising.
+The bond between humans and their pets is cherished globally, and AavePet recognizes the importance of providing optimal care for beloved companions. This white paper introduces AavePet, a decentralized platform that integrates blockchain technology, DeFi principles, and a Pet NFT Marketplace to revolutionize pet care and fundraising.
 
 # AavePet Ecosystem
 
 2.1 AavePet Token (APT)
     
-    AavePet Token (APT) is the native cryptocurrency within the AavePet ecosystem. It serves as a medium of exchange, allowing users to purchase pet-specific goods and services, such as veterinary visits, pet food, toys, and more. APT is an ERC-20 token built on the Ethereum blockchain, ensuring security, transparency, and interoperability.
+AavePet Token (APT) is the native cryptocurrency within the AavePet ecosystem. It serves as a medium of exchange, allowing users to purchase pet-specific goods and services, such as veterinary visits, pet food, toys, and more. APT is an ERC-20 token built on the Ethereum blockchain, ensuring security, transparency, and interoperability.
 
 2.2 AavePet Smart Contracts
 
-  AavePet utilizes smart contracts on the Ethereum network to facilitate secure and transparent transactions. These smart contracts govern the distribution, management, and usage of APT tokens, ensuring trust and reliability within the ecosystem. Furthermore, they enable the integration of third-party applications and services, expanding the utility of APT.
+AavePet utilizes smart contracts on the Ethereum network to facilitate secure and transparent transactions. These smart contracts govern the distribution, management, and usage of APT tokens, ensuring trust and reliability within the ecosystem. Furthermore, they enable the integration of third-party applications and services, expanding the utility of APT.
 
 # AavePet Features and Functionality
 
 3.1 Pet Wallet
 
-    AavePet provides pet owners with a dedicated digital wallet to securely hold and manage their APT tokens. Accessible through a user-friendly mobile or web application, the pet wallet empowers users to have full control over their pet-related funds.
+AavePet provides pet owners with a dedicated digital wallet to securely hold and manage their APT tokens. Accessible through a user-friendly mobile or web application, the pet wallet empowers users to have full control over their pet-related funds.
 
 3.2 Veterinary Services
 
@@ -40,21 +41,21 @@ AavePet offers a decentralized marketplace where pet owners can purchase a wide 
 
 # Pet NFT Marketplace
 
-    AavePet introduces a unique Pet NFT Marketplace, where pet owners can create and sell non-fungible tokens (NFTs) representing their pets. By minting pet NFTs, owners can showcase their pets' uniqueness and sell them to raise funds for their pets' care. The Pet NFT Marketplace provides a new and exciting way for pet owners to engage with the community and support their pets' needs.
+AavePet introduces a unique Pet NFT Marketplace, where pet owners can create and sell non-fungible tokens (NFTs) representing their pets. By minting pet NFTs, owners can showcase their pets' uniqueness and sell them to raise funds for their pets' care. The Pet NFT Marketplace provides a new and exciting way for pet owners to engage with the community and support their pets' needs.
 
 # Benefits of AavePet
 
 5.1 Financial Accessibility
     
-    AavePet eliminates financial barriers by allowing pet owners to allocate funds specifically for their pets' care. Leveraging DeFi principles, AavePet ensures that even those with limited access to traditional financial services can afford necessary pet care.
+AavePet eliminates financial barriers by allowing pet owners to allocate funds specifically for their pets' care. Leveraging DeFi principles, AavePet ensures that even those with limited access to traditional financial services can afford necessary pet care.
 
 5.2 Transparency and Security
 
-  AavePet employs blockchain technology to guarantee transaction transparency and immutability, providing users with a high level of security. Users can verify the allocation and usage of their APT tokens and the authenticity of pet NFTs, fostering trust within the ecosystem.
+AavePet employs blockchain technology to guarantee transaction transparency and immutability, providing users with a high level of security. Users can verify the allocation and usage of their APT tokens and the authenticity of pet NFTs, fostering trust within the ecosystem.
 
 5.3 Fundraising Opportunities
 
-  The Pet NFT Marketplace within AavePet unlocks fundraising opportunities for pet owners. By creating and selling pet NFTs, owners can raise funds to support their pets' medical expenses, dietary needs, and overall well-being.
+The Pet NFT Marketplace within AavePet unlocks fundraising opportunities for pet owners. By creating and selling pet NFTs, owners can raise funds to support their pets' medical expenses, dietary needs, and overall well-being.
 
 # Roadmap
 
@@ -76,8 +77,8 @@ Continuous development and improvement based on community feedback and market de
 
 # Conclusion
 
-    AavePet revolutionizes the pet care industry by providing a DeFi ecosystem that empowers pet owners to invest in their pets' well-being while introducing a Pet NFT Marketplace for fundraising. With its features, benefits, and roadmap, AavePet aims to redefine pet care, foster a vibrant community, and ensure that every pet receives the care it deserves.
+AavePet revolutionizes the pet care industry by providing a DeFi ecosystem that empowers pet owners to invest in their pets' well-being while introducing a Pet NFT Marketplace for fundraising. With its features, benefits, and roadmap, AavePet aims to redefine pet care, foster a vibrant community, and ensure that every pet receives the care it deserves.
 
 # Disclaimer: 
 
-  This white paper is for informational purposes only and does not constitute financial or investment advice. Users should conduct their own research and seek professional guidance before participating in the AavePet ecosystem or engaging with the Pet NFT Marketplace.
+This white paper is for informational purposes only and does not constitute financial or investment advice. Users should conduct their own research and seek professional guidance before participating in the AavePet ecosystem or engaging with the Pet NFT Marketplace.
