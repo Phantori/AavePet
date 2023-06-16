@@ -1,5 +1,5 @@
 <p align="center" width="100%">
-    <img width="32%" src="(https://github.com/Phantori/AavePet/blob/main/Dogo4x4.jpg?raw=true)">
+    <img src="(https://github.com/Phantori/AavePet/blob/main/Dogo4x4.jpg?raw=true)">
 </p>
 
 # AavePet
