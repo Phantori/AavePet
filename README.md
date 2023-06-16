@@ -1,5 +1,5 @@
 <p align="center" width="100%">
-    (https://github.com/Phantori/AavePet/blob/main/Dogo4x4.jpg?raw=true)
+    <img width="33%" src=(https://github.com/Phantori/AavePet/blob/main/Dogo4x4.jpg?raw=true)>
 </p>
 
 ![Dogo4x4](https://github.com/Phantori/AavePet/blob/main/Dogo4x4.jpg?raw=true)
