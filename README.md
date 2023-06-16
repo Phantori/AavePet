@@ -2,7 +2,7 @@
     <img src=(https://github.com/Phantori/AavePet/blob/main/Dogo4x4.jpg?raw=true)>
 </p>
 <p align="center" width="100%">
-<![Dogo4x4](https://github.com/Phantori/AavePet/blob/main/Dogo4x4.jpg?raw=true)>
+    <(https://github.com/Phantori/AavePet/blob/main/Dogo4x4.jpg?raw=true)>
 </p>
 # AavePet
 AavePet is a groundbreaking decentralized finance (DeFi) application built on the Aave ecosystem that aims to revolutionize the way people invest in the health and well-being of their beloved pets.
