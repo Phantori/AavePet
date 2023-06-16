@@ -1,7 +1,7 @@
 <p align="center" width="100%">
-    <img width="32%" src="photos/pranksta1.jpg">
-    <img width="32%" src="photos/pranksta2.jpg">
-    <img width="32%" src="photos/pranksta3.jpg">
+    <img width="32%" src="[](https://github.com/Phantori/AavePet/blob/main/Dogo4x4.jpg?raw=true)">
+    <img width="32%" src="[](https://github.com/Phantori/AavePet/blob/main/Dogo4x4.jpg?raw=true)">
+    <img width="32%" src="[](https://github.com/Phantori/AavePet/blob/main/Dogo4x4.jpg?raw=true)">
 </p>
 
 # AavePet
