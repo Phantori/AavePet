@@ -1,5 +1,5 @@
 <p align="center" width="100%">
-    <img src="(https://github.com/Phantori/AavePet/blob/main/Dogo4x4.jpg?raw=true)">
+    <img src="![Radiian Blue](https://raw.githubusercontent.com/Radiian-Arts-Main/Radiian-Arts-Assets/master/Promotional/PNG/Github-logo-Main-Blue.png)">
 </p>
 
 # AavePet
