@@ -1,4 +1,3 @@
-**Align center:**
 <p align="center" width="100%">
     <img src="![Dogo4x4](https://github.com/Phantori/AavePet/blob/main/Dogo4x4.jpg?raw=true)">
 </p>
