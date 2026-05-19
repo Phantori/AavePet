@@ -1,0 +1,14 @@
+{
+  "name": "aavepet-subgraph",
+  "version": "0.1.0",
+  "scripts": {
+    "codegen": "graph codegen",
+    "build": "graph build",
+    "deploy": "graph deploy aavepet/aavepet --node https://api.studio.thegraph.com/deploy/",
+    "deploy:local": "graph deploy aavepet/aavepet --node http://localhost:8020/"
+  },
+  "dependencies": {
+    "@graphprotocol/graph-cli": "^0.72.0",
+    "@graphprotocol/graph-ts": "^0.35.0"
+  }
+}

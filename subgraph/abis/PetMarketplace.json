@@ -1,0 +1,32 @@
+[
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true,  "name": "tokenId", "type": "uint256" },
+      { "indexed": true,  "name": "seller",  "type": "address" },
+      { "indexed": false, "name": "price",   "type": "uint256" }
+    ],
+    "name": "Listed",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "name": "tokenId", "type": "uint256" },
+      { "indexed": true, "name": "seller",  "type": "address" }
+    ],
+    "name": "Delisted",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "name": "tokenId", "type": "uint256" },
+      { "indexed": true, "name": "seller",  "type": "address" },
+      { "indexed": true, "name": "buyer",   "type": "address" },
+      { "indexed": false,"name": "price",   "type": "uint256" }
+    ],
+    "name": "Sold",
+    "type": "event"
+  }
+]
