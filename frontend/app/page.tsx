@@ -1,0 +1,29 @@
+import { ConnectButton } from "@/components/ConnectButton";
+import { MintNFT } from "@/components/MintNFT";
+import { Marketplace } from "@/components/Marketplace";
+
+export default function Home() {
+  return (
+    <main className="max-w-5xl mx-auto px-4 py-8">
+      <header className="flex items-center justify-between mb-12">
+        <div>
+          <h1 className="text-3xl font-bold text-brand-500">🐾 AavePet</h1>
+          <p className="text-gray-400 text-sm mt-1">DeFi for your best friend</p>
+        </div>
+        <ConnectButton />
+      </header>
+
+      <div className="grid gap-8 md:grid-cols-2">
+        <section>
+          <h2 className="text-xl font-semibold mb-4">Mint your Pet NFT</h2>
+          <MintNFT />
+        </section>
+
+        <section>
+          <h2 className="text-xl font-semibold mb-4">Marketplace</h2>
+          <Marketplace />
+        </section>
+      </div>
+    </main>
+  );
+}
