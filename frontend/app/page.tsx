@@ -11,7 +11,9 @@ export default function Home() {
           <p className="text-gray-400 text-sm mt-1">DeFi for your best friend</p>
         </div>
         <nav className="flex items-center gap-4">
+          <a href="/dashboard" className="text-sm text-gray-400 hover:text-gray-50 transition-colors">Dashboard</a>
           <a href="/browse" className="text-sm text-gray-400 hover:text-gray-50 transition-colors">Browse</a>
+          <a href="/services" className="text-sm text-gray-400 hover:text-gray-50 transition-colors">Services</a>
           <a href="/my-pets" className="text-sm text-gray-400 hover:text-gray-50 transition-colors">My Pets</a>
           <ConnectButton />
         </nav>

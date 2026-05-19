@@ -7,8 +7,10 @@ import type { OwnedPet } from "@/lib/nft";
 import {
   ADDRESSES, MARKETPLACE_ABI, PET_NFT_ABI, PET_VAULT_ABI, ERC20_ABI, BASE_TOKENS,
 } from "@/lib/contracts";
+import { CreditLine } from "@/components/CreditLine";
+import { RainbowBridgeModal } from "@/components/RainbowBridgeModal";
 
-type Tab = "list" | "savings";
+type Tab = "list" | "savings" | "credit" | "memorial";
 
 interface VaultRowProps {
   tokenId: bigint;
@@ -132,6 +134,7 @@ interface Props {
 
 export function PetCard({ pet }: Props) {
   const [tab, setTab] = useState<Tab>("list");
+  const [showBridge, setShowBridge] = useState(false);
   const [listPrice, setListPrice] = useState("");
   const [showList, setShowList] = useState(false);
 
@@ -178,16 +181,16 @@ export function PetCard({ pet }: Props) {
         </div>
 
         {/* Tab switcher */}
-        <div className="flex gap-2 border-b border-gray-800 pb-2">
-          {(["list", "savings"] as Tab[]).map((t) => (
+        <div className="flex gap-3 border-b border-gray-800 pb-2 flex-wrap">
+          {([["list", "Sell"], ["savings", "Savings"], ["credit", "Credit"], ["memorial", "🌈"]] as [Tab, string][]).map(([t, label]) => (
             <button
               key={t}
               onClick={() => setTab(t)}
-              className={`text-xs font-semibold capitalize transition-colors ${
+              className={`text-xs font-semibold transition-colors ${
                 tab === t ? "text-brand-400" : "text-gray-500 hover:text-gray-300"
               }`}
             >
-              {t === "list" ? "Marketplace" : "Savings"}
+              {label}
             </button>
           ))}
         </div>
@@ -232,6 +235,26 @@ export function PetCard({ pet }: Props) {
                   </div>
                 )}
               </>
+            )}
+          </div>
+        )}
+
+        {tab === "credit" && <CreditLine tokenId={pet.tokenId} />}
+
+        {tab === "memorial" && (
+          <div className="space-y-3">
+            <p className="text-xs text-gray-500">
+              When your pet passes, you can create an eternal on-chain memorial. The NFT is locked
+              forever and vault yield can stream to a charity of your choice in their name.
+            </p>
+            <button
+              onClick={() => setShowBridge(true)}
+              className="w-full bg-purple-800 hover:bg-purple-700 rounded-lg px-4 py-2 text-sm font-semibold transition-colors"
+            >
+              🌈 Open Rainbow Bridge
+            </button>
+            {showBridge && (
+              <RainbowBridgeModal tokenId={pet.tokenId} onClose={() => setShowBridge(false)} />
             )}
           </div>
         )}
