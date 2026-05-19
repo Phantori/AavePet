@@ -4,6 +4,7 @@ type Pet @entity {
   owner: Bytes!              # current owner address
   creator: Bytes!            # original minter
   tokenURI: String!
+  dna: BigInt!               # BioSpark 256-bit DNA generated at mint
   mintedAt: BigInt!          # block timestamp
   listing: Listing           # active listing, if any
   usdcDeposits: [VaultDeposit!]! @derivedFrom(field: "pet")

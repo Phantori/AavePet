@@ -9,8 +9,9 @@ import {
 } from "@/lib/contracts";
 import { CreditLine } from "@/components/CreditLine";
 import { RainbowBridgeModal } from "@/components/RainbowBridgeModal";
+import { HeraldryCard } from "@/components/HeraldryCard";
 
-type Tab = "list" | "savings" | "credit" | "memorial";
+type Tab = "list" | "savings" | "credit" | "lineage" | "memorial";
 
 interface VaultRowProps {
   tokenId: bigint;
@@ -182,7 +183,7 @@ export function PetCard({ pet }: Props) {
 
         {/* Tab switcher */}
         <div className="flex gap-3 border-b border-gray-800 pb-2 flex-wrap">
-          {([["list", "Sell"], ["savings", "Savings"], ["credit", "Credit"], ["memorial", "🌈"]] as [Tab, string][]).map(([t, label]) => (
+          {([["list", "Sell"], ["savings", "Savings"], ["credit", "Credit"], ["lineage", "✦ DNA"], ["memorial", "🌈"]] as [Tab, string][]).map(([t, label]) => (
             <button
               key={t}
               onClick={() => setTab(t)}
@@ -240,6 +241,15 @@ export function PetCard({ pet }: Props) {
         )}
 
         {tab === "credit" && <CreditLine tokenId={pet.tokenId} />}
+
+        {tab === "lineage" && (
+          <div className="space-y-2">
+            <p className="text-xs text-gray-500">
+              BioSpark DNA — immutable traits encoded at mint. Click the card to reveal the Coat of Arms.
+            </p>
+            <HeraldryCard pet={pet} />
+          </div>
+        )}
 
         {tab === "memorial" && (
           <div className="space-y-3">

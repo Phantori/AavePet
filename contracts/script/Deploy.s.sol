@@ -9,6 +9,7 @@ import {PetVault} from "../src/PetVault.sol";
 import {RainbowBridge} from "../src/RainbowBridge.sol";
 import {ServiceMarketplace} from "../src/ServiceMarketplace.sol";
 import {PetCreditLine} from "../src/PetCreditLine.sol";
+import {PetHeraldry} from "../src/PetHeraldry.sol";
 
 contract Deploy is Script {
     // Base mainnet — Aave v3
@@ -54,6 +55,15 @@ contract Deploy is Script {
             AAVE_POOL, USDC, VAR_DEBT_USDC, address(wethVault), deployer
         );
         console.log("PetCreditLine    :", address(creditLine));
+
+        PetHeraldry heraldry = new PetHeraldry(
+            deployer,
+            address(nft),
+            address(usdcVault),
+            address(wethVault),
+            address(creditLine)
+        );
+        console.log("PetHeraldry      :", address(heraldry));
 
         vm.stopBroadcast();
     }

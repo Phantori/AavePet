@@ -20,6 +20,7 @@ export interface GraphPet {
   owner: string;
   creator: string;
   tokenURI: string;
+  dna: string;           // uint256 as decimal string
   mintedAt: string;
   listing: { price: string; active: boolean } | null;
 }
@@ -45,6 +46,7 @@ const PET_FIELDS = `
   owner
   creator
   tokenURI
+  dna
   mintedAt
   listing { price active }
 `;

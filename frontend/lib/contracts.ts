@@ -8,7 +8,73 @@ export const ADDRESSES = {
   rainbowBridge:     process.env.NEXT_PUBLIC_RAINBOW_BRIDGE_ADDRESS    as `0x${string}`,
   serviceMarketplace:process.env.NEXT_PUBLIC_SERVICE_MARKETPLACE_ADDRESS as `0x${string}`,
   petCreditLine:     process.env.NEXT_PUBLIC_PET_CREDIT_LINE_ADDRESS   as `0x${string}`,
+  petHeraldry:       process.env.NEXT_PUBLIC_PET_HERALDRY_ADDRESS      as `0x${string}`,
 } as const;
+
+export const PET_HERALDRY_ABI = [
+  {
+    name: "evaluateMilestones",
+    type: "function",
+    stateMutability: "nonpayable",
+    inputs: [{ name: "tokenId", type: "uint256" }],
+    outputs: [{ name: "newCharges", type: "uint256" }],
+  },
+  {
+    name: "getHeraldryURI",
+    type: "function",
+    stateMutability: "view",
+    inputs: [
+      { name: "tokenId", type: "uint256" },
+      { name: "petName", type: "string" },
+    ],
+    outputs: [{ name: "", type: "string" }],
+  },
+  {
+    name: "getHeraldrySVG",
+    type: "function",
+    stateMutability: "view",
+    inputs: [
+      { name: "tokenId", type: "uint256" },
+      { name: "petName", type: "string" },
+    ],
+    outputs: [{ name: "", type: "string" }],
+  },
+  {
+    name: "charges",
+    type: "function",
+    stateMutability: "view",
+    inputs: [{ name: "tokenId", type: "uint256" }],
+    outputs: [{ name: "", type: "uint256" }],
+  },
+  {
+    name: "foundPack",
+    type: "function",
+    stateMutability: "nonpayable",
+    inputs: [{ name: "packId", type: "bytes32" }],
+    outputs: [],
+  },
+  {
+    name: "joinPack",
+    type: "function",
+    stateMutability: "nonpayable",
+    inputs: [{ name: "packId", type: "bytes32" }],
+    outputs: [],
+  },
+  {
+    name: "packOf",
+    type: "function",
+    stateMutability: "view",
+    inputs: [{ name: "member", type: "address" }],
+    outputs: [{ name: "", type: "bytes32" }],
+  },
+  {
+    name: "packFounder",
+    type: "function",
+    stateMutability: "view",
+    inputs: [{ name: "packId", type: "bytes32" }],
+    outputs: [{ name: "", type: "address" }],
+  },
+] as const;
 
 export const RAINBOW_BRIDGE_ABI = [
   {
@@ -248,6 +314,13 @@ export const PET_NFT_ABI = [
       { name: "approved", type: "bool" },
     ],
     outputs: [],
+  },
+  {
+    name: "tokenDNA",
+    type: "function",
+    stateMutability: "view",
+    inputs: [{ name: "tokenId", type: "uint256" }],
+    outputs: [{ name: "", type: "uint256" }],
   },
 ] as const;
 

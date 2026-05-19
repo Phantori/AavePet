@@ -43,6 +43,7 @@ export function handlePetMinted(event: PetMinted): void {
   pet.owner = event.params.owner;
   pet.creator = event.params.owner;
   pet.tokenURI = event.params.tokenURI;
+  pet.dna = event.params.dna;
   pet.mintedAt = event.block.timestamp;
   pet.save();
 
