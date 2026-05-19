@@ -10,7 +10,12 @@ export default function Home() {
           <h1 className="text-3xl font-bold text-brand-500">🐾 AavePet</h1>
           <p className="text-gray-400 text-sm mt-1">DeFi for your best friend</p>
         </div>
-        <ConnectButton />
+        <nav className="flex items-center gap-4">
+          <a href="/my-pets" className="text-sm text-gray-400 hover:text-gray-50 transition-colors">
+            My Pets
+          </a>
+          <ConnectButton />
+        </nav>
       </header>
 
       <div className="grid gap-8 md:grid-cols-2">

@@ -3,7 +3,48 @@ export const ADDRESSES = {
   aptToken: process.env.NEXT_PUBLIC_APT_TOKEN_ADDRESS as `0x${string}`,
   petNFT: process.env.NEXT_PUBLIC_PET_NFT_ADDRESS as `0x${string}`,
   marketplace: process.env.NEXT_PUBLIC_MARKETPLACE_ADDRESS as `0x${string}`,
+  petVault: process.env.NEXT_PUBLIC_PET_VAULT_ADDRESS as `0x${string}`,
 } as const;
+
+export const PET_VAULT_ABI = [
+  {
+    name: "deposit",
+    type: "function",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "tokenId", type: "uint256" },
+      { name: "amount", type: "uint256" },
+    ],
+    outputs: [],
+  },
+  {
+    name: "withdraw",
+    type: "function",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "tokenId", type: "uint256" },
+      { name: "amount", type: "uint256" },
+    ],
+    outputs: [],
+  },
+  {
+    name: "deposits",
+    type: "function",
+    stateMutability: "view",
+    inputs: [
+      { name: "tokenId", type: "uint256" },
+      { name: "depositor", type: "address" },
+    ],
+    outputs: [{ name: "", type: "uint256" }],
+  },
+  {
+    name: "yieldForPet",
+    type: "function",
+    stateMutability: "view",
+    inputs: [{ name: "tokenId", type: "uint256" }],
+    outputs: [{ name: "", type: "uint256" }],
+  },
+] as const;
 
 export const APT_TOKEN_ABI = [
   {
