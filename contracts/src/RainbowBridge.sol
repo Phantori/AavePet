@@ -6,15 +6,36 @@ import {IERC721Receiver} from "@openzeppelin/contracts/token/ERC721/IERC721Recei
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
+
+interface IGenesisCapsule {
+    function mintCapsule(
+        address to,
+        uint256 capsuleId,
+        uint256 dna,
+        uint256 lifetimeUsdcSaved,
+        uint256 charges
+    ) external;
+}
+
+interface IPetNFTDNA {
+    function tokenDNA(uint256 tokenId) external view returns (uint256);
+}
 
 /// @notice Immutable pet memorial contract.
 /// When a pet passes, the owner transfers the NFT here permanently — it can never leave.
 /// The owner can append a final tribute and direct the vault's accumulated yield to charity.
 /// All data is on-chain and eternal.
-contract RainbowBridge is IERC721Receiver, ReentrancyGuard {
+contract RainbowBridge is IERC721Receiver, ReentrancyGuard, Ownable {
     using SafeERC20 for IERC20;
 
     IERC721 public immutable petNFT;
+
+    /// @notice GenesisCapsule contract; mints an ancestor capsule on archive. Optional.
+    address public genesisCapsule;
+
+    /// @notice PetNFT contract used to read tokenDNA during archive. Optional.
+    IPetNFTDNA public petNFTContract;
 
     struct Memorial {
         address originalOwner;
@@ -40,8 +61,20 @@ contract RainbowBridge is IERC721Receiver, ReentrancyGuard {
     error NotArchived();
     error AlreadyArchived();
 
-    constructor(address _petNFT) {
+    constructor(address _petNFT, address initialOwner)
+        Ownable(initialOwner)
+    {
         petNFT = IERC721(_petNFT);
+    }
+
+    /// @notice Set the GenesisCapsule contract address. Owner only.
+    function setGenesisCapsule(address gc) external onlyOwner {
+        genesisCapsule = gc;
+    }
+
+    /// @notice Set the PetNFT contract used to read tokenDNA. Owner only.
+    function setPetNFTContract(address petNFT_) external onlyOwner {
+        petNFTContract = IPetNFTDNA(petNFT_);
     }
 
     /// @notice Archive a pet NFT as a memorial. The NFT is locked here forever.
@@ -65,6 +98,20 @@ contract RainbowBridge is IERC721Receiver, ReentrancyGuard {
 
         emit PetArchived(tokenId, msg.sender, epitaph);
         if (charity != address(0)) emit CharitySet(tokenId, charity);
+
+        // Mint a Genesis Capsule to the original owner so they can pass traits to a successor.
+        if (genesisCapsule != address(0)) {
+            uint256 dna = address(petNFTContract) != address(0)
+                ? petNFTContract.tokenDNA(tokenId)
+                : 0;
+            IGenesisCapsule(genesisCapsule).mintCapsule(
+                msg.sender, // original owner receives the capsule
+                tokenId,    // capsule id = archived tokenId
+                dna,
+                0,          // lifetimeUsdcSaved — snapshot deferred (requires oracle)
+                0           // charges — snapshot deferred
+            );
+        }
     }
 
     /// @notice Append a photo or memory CID to the memorial. Only the original owner.

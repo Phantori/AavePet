@@ -13,6 +13,10 @@ import {PetHeraldry} from "../src/PetHeraldry.sol";
 import {PetGuardian} from "../src/PetGuardian.sol";
 import {PetRecords} from "../src/PetRecords.sol";
 import {PackTreasury} from "../src/PackTreasury.sol";
+import {WeatherGlyph} from "../src/WeatherGlyph.sol";
+import {GuildCrest} from "../src/GuildCrest.sol";
+import {StasisPod} from "../src/StasisPod.sol";
+import {GenesisCapsule} from "../src/GenesisCapsule.sol";
 
 contract Deploy is Script {
     // Base mainnet — Aave v3
@@ -48,7 +52,7 @@ contract Deploy is Script {
         PetVault wethVault = new PetVault(WETH, A_WETH, AAVE_POOL, "WETH", deployer);
         console.log("WETH Vault       :", address(wethVault));
 
-        RainbowBridge bridge = new RainbowBridge(address(nft));
+        RainbowBridge bridge = new RainbowBridge(address(nft), deployer);
         console.log("RainbowBridge    :", address(bridge));
 
         ServiceMarketplace services = new ServiceMarketplace(USDC, deployer);
@@ -76,6 +80,24 @@ contract Deploy is Script {
 
         PackTreasury packTreasury = new PackTreasury(USDC, A_USDC, AAVE_POOL, address(heraldry));
         console.log("PackTreasury     :", address(packTreasury));
+
+        WeatherGlyph weatherGlyph = new WeatherGlyph(deployer);
+        console.log("WeatherGlyph     :", address(weatherGlyph));
+
+        GuildCrest guildCrest = new GuildCrest(USDC, address(heraldry), deployer, deployer);
+        console.log("GuildCrest       :", address(guildCrest));
+
+        StasisPod stasisPod = new StasisPod(address(nft), address(creditLine), deployer, deployer);
+        console.log("StasisPod        :", address(stasisPod));
+
+        GenesisCapsule genesisCapsule = new GenesisCapsule(address(bridge), deployer);
+        console.log("GenesisCapsule   :", address(genesisCapsule));
+
+        // Wire up cross-contract references
+        bridge.setGenesisCapsule(address(genesisCapsule));
+        bridge.setPetNFTContract(address(nft));
+        nft.setGenesisCapsule(address(genesisCapsule));
+        genesisCapsule.setPetNFT(address(nft));
 
         vm.stopBroadcast();
     }
