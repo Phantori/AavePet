@@ -2,83 +2,183 @@
 
 # AavePet
 
-AavePet is a groundbreaking decentralized finance (DeFi) application built on the Aave ecosystem that aims to revolutionize the way people invest in the health and well-being of their beloved pets.
+**DeFi-powered pet care on Base — ERC-721 pet NFTs backed by Aave v3 yield, cinematic on-chain heraldry, and a full physical-digital ecosystem for real-world adventurers.**
 
+> Built on Base mainnet · Solidity 0.8.24 · OpenZeppelin v5 · Next.js 14 · wagmi v2
 
-# Title: AavePet: Empowering Pet Owners through DeFi and Pet NFT Marketplace
+---
 
-# Abstract:
+## What is AavePet?
 
-AavePet is an innovative decentralized finance (DeFi) application built on the Aave ecosystem, aiming to revolutionize pet care by providing a dedicated blockchain and cryptocurrency solution. The platform enables pet owners to invest in their pets' health while leveraging the benefits of DeFi. Additionally, AavePet introduces a unique pet NFT marketplace where users can create and sell NFTs of their pets to raise funds. This white paper outlines the AavePet ecosystem, its underlying technology, benefits, and introduces the Pet NFT Marketplace within its comprehensive roadmap.
+AavePet turns your pet into a living on-chain entity. Each pet is an ERC-721 NFT with immutable 256-bit BioSpark DNA, a procedural Coat of Arms that evolves with DeFi milestones, and a suite of financial tools — savings vaults, credit lines, guardian access, and more — all powered by Aave v3 yield on Base.
 
-# Introduction
+The project bridges digital DeFi and real-world pet care: from on-trail portable sanctuaries to lineage inheritance for future pets.
 
-The bond between humans and their pets is cherished globally, and AavePet recognizes the importance of providing optimal care for beloved companions. This white paper introduces AavePet, a decentralized platform that integrates blockchain technology, DeFi principles, and a Pet NFT Marketplace to revolutionize pet care and fundraising.
+---
 
-# AavePet Ecosystem
+## Smart Contracts
 
-2.1 AavePet Token (APT)
-    
-AavePet Token (APT) is the native cryptocurrency within the AavePet ecosystem. It serves as a medium of exchange, allowing users to purchase pet-specific goods and services, such as veterinary visits, pet food, toys, and more. APT is an ERC-20 token built on the Ethereum blockchain, ensuring security, transparency, and interoperability.
+### Core
 
-2.2 AavePet Smart Contracts
+| Contract | Description |
+|---|---|
+| `APTToken` | ERC-20 native token (APT) used for marketplace pricing |
+| `PetNFT` | ERC-721 pet NFTs with EIP-2981 royalties and BioSpark DNA |
+| `PetMarketplace` | On-chain pet trading with royalty enforcement |
+| `PetVault` | Aave v3 yield vaults (USDC + WETH) per pet |
+| `PetCreditLine` | Aave v3 variable-rate credit delegation backed by vault balance |
+| `ServiceMarketplace` | ERC-1155 vouchers + milestone-release service agreements |
 
-AavePet utilizes smart contracts on the Ethereum network to facilitate secure and transparent transactions. These smart contracts govern the distribution, management, and usage of APT tokens, ensuring trust and reliability within the ecosystem. Furthermore, they enable the integration of third-party applications and services, expanding the utility of APT.
+### Identity & Heraldry (L2 Crest)
 
-# AavePet Features and Functionality
+| Contract | Description |
+|---|---|
+| `PetHeraldry` | Procedural Coat of Arms SVG — tier, species glyph, charge badges, pack system |
+| `GenesisCapsule` | ERC-1155 ancestor capsules minted on rainbow bridge archive |
 
-3.1 Pet Wallet
+### Security & Access
 
-AavePet provides pet owners with a dedicated digital wallet to securely hold and manage their APT tokens. Accessible through a user-friendly mobile or web application, the pet wallet empowers users to have full control over their pet-related funds.
+| Contract | Description |
+|---|---|
+| `PetGuardian` | 2-of-3 dead man's switch emergency access with inactivity period |
+| `PetRecords` | Encrypted IPFS health records with vet access control lists |
+| `RainbowBridge` | Eternal on-chain memorial; archives pet and mints GenesisCapsule |
 
-3.2 Veterinary Services
+### Architectural Expansions
 
-Through strategic partnerships with veterinary clinics and professionals, AavePet allows pet owners to utilize APT tokens exclusively for veterinary visits, vaccinations, surgeries, and other essential medical treatments. The blockchain ensures transparency, preventing misuse or misallocation of funds.
+| Contract | Layer | Description |
+|---|---|---|
+| `PackTreasury` | L1 Seal | Aave v3 mutual-aid DAO with emergency claims, pack-gated |
+| `GuildCrest` | L2 Crest | ERC-721 guild banners (max 16); cooperative yield-pledge; evolving SVG tiers |
+| `StasisPod` | L3 Device | ERC721Receiver; freeze wellness decay 7 days–2 years; 10% preservation fee |
+| `WeatherGlyph` | L4 Glyph | Privacy-preserving self-declared climate oracle; 6 zones × 2 hemispheres |
+| `MerchantGlyph` | L4 Glyph | Aegis Rover portable kiosk system; on-trail hospitality badges; wholesale inventory |
 
-3.3 Pet Supplies and Services Marketplace
+### BioSpark DNA Libraries
 
-AavePet offers a decentralized marketplace where pet owners can purchase a wide range of pet-related products and services. This includes high-quality pet food, toys, grooming services, pet insurance, and more. All transactions within the marketplace are conducted using APT tokens, fostering a vibrant ecosystem.
+| Library | Description |
+|---|---|
+| `lib/BioSparkDNA.sol` | 256-bit DNA generation (keccak256 entropy) and trait decoding |
+| `lib/HeraldryRenderer.sol` | On-chain SVG Coat of Arms with grid, glow, vignette layers |
+| `lib/CipherRunes.sol` | 40-rune Elder Futhark + BioSpark cipher name from DNA entropy bits |
 
-# Pet NFT Marketplace
+---
 
-AavePet introduces a unique Pet NFT Marketplace, where pet owners can create and sell non-fungible tokens (NFTs) representing their pets. By minting pet NFTs, owners can showcase their pets' uniqueness and sell them to raise funds for their pets' care. The Pet NFT Marketplace provides a new and exciting way for pet owners to engage with the community and support their pets' needs.
+## DNA & Heraldry System
 
-# Benefits of AavePet
+Every pet gets an immutable 256-bit DNA string at mint:
 
-5.1 Financial Accessibility
-    
-AavePet eliminates financial barriers by allowing pet owners to allocate funds specifically for their pets' care. Leveraging DeFi principles, AavePet ensures that even those with limited access to traditional financial services can afford necessary pet care.
+```
+Bits  0–7:   species       Bits  8–15:  generation
+Bits 16–23:  seniorRisk    Bits 24–31:  defiResonance
+Bits 32–39:  vitality      Bits 40–47:  intelligence
+Bits 48–55:  loyalty       Bits 56–255: entropic noise
+```
 
-5.2 Transparency and Security
+The **BioSpark Cipher** converts DNA entropy into a 40-rune secret name using Elder Futhark + BioSpark alphabet (5-bit groups from bits 56–255).
 
-AavePet employs blockchain technology to guarantee transaction transparency and immutability, providing users with a high level of security. Users can verify the allocation and usage of their APT tokens and the authenticity of pet NFTs, fostering trust within the ecosystem.
+The **Coat of Arms** (320×380 SVG) evolves through four shield tiers based on lifetime USDC saved:
 
-5.3 Fundraising Opportunities
+| Tier | Threshold | Shield colour |
+|---|---|---|
+| Bronze | < $100 | `#b45309` |
+| Silver | $100 | `#94a3b8` |
+| Gold | $1 000 | `#fbbf24` |
+| Platinum | $10 000 | `#e2e8f0` |
 
-The Pet NFT Marketplace within AavePet unlocks fundraising opportunities for pet owners. By creating and selling pet NFTs, owners can raise funds to support their pets' medical expenses, dietary needs, and overall well-being.
+Charge badges (⚡♥★♛✦) unlock for DeFi milestones: credit line use, savings deposits, yield earned, sovereignty, pack membership.
 
-# Roadmap
+---
 
-AavePet's comprehensive roadmap includes the following milestones:
+## Lineage Inheritance
 
-Expansion of strategic partnerships with veterinary clinics, service providers, and pet-related businesses to create a robust ecosystem.
+When a pet is archived via RainbowBridge, a **GenesisCapsule** ERC-1155 token is minted to the owner. This capsule carries the ancestor's DNA, lifetime savings, and earned charges.
 
-Integration of AI-powered pet health monitoring and tracking features to provide personalized recommendations for optimal pet care.
+Burning the capsule in `PetNFT.mintWithLineage()` blends the ancestor's species, generation, and resonance (bits 0–31) into the new offspring's fresh entropy DNA.
 
-Collaboration with pet food manufacturers and retailers to offer a diverse range of high-quality pet food options.
+---
 
- Development of mobile applications for enhanced user experience and accessibility.
- 
-Integration with pet insurance providers to offer comprehensive coverage options for pet owners.
+## Portable Kiosk System — Aegis Rover
 
-Launch of the Pet NFT Marketplace, enabling pet owners to create, buy, and sell unique NFTs of their pets to raise funds for their care.
+Owners can deploy a physical rolling pet sanctuary (Sprite / Ranger / Behemoth) on-trail by calling `MerchantGlyph.deployKiosk()`. Requires non-zero Aave yield as capital proof. Max 4,096 active kiosks globally.
 
-Continuous development and improvement based on community feedback and market demands.
+When active, the pet's Coat of Arms receives a live **Merchant Glyph** visible to nearby users. Trail guests can check into your sanctuary for a 1 USDC hospitality fee, earning you badge milestones up to **Sovereign Trail-Medic**.
 
-# Conclusion
+Wholesale pet supplies can be settled on-chain via `syncWholesaleInventory()`, routing USDC to approved vendors with per-pet purchase receipts.
 
-AavePet revolutionizes the pet care industry by providing a DeFi ecosystem that empowers pet owners to invest in their pets' well-being while introducing a Pet NFT Marketplace for fundraising. With its features, benefits, and roadmap, AavePet aims to redefine pet care, foster a vibrant community, and ensure that every pet receives the care it deserves.
+---
 
-# Disclaimer: 
+## Frontend
 
-This white paper is for informational purposes only and does not constitute financial or investment advice. Users should conduct their own research and seek professional guidance before participating in the AavePet ecosystem or engaging with the Pet NFT Marketplace.
+Built with **Next.js 14 App Router**, **wagmi v2 + viem**, **RainbowKit**, **TailwindCSS**.
+
+### Key components
+
+| Component | Description |
+|---|---|
+| `HeraldryDisplay` | BioSpark cinematic canvas (800×540, 5-layer animation system) |
+| `HeraldryCard` | 3D CSS card flip — pet image front, Coat of Arms back |
+| `CipherReveal` | 5×8 rune grid with sequential decode animation |
+| `WeatherGlyphConfig` | Climate zone picker with live seasonal ambient theme preview |
+| `StasisPodManager` | Lock/unlock UI with duration picker and preservation fee display |
+| `MerchantGlyphPanel` | Kiosk deploy/retract, guest check-in, badge progress |
+| `GuardianSetup` | 2-of-3 guardian configuration and dead man's switch status |
+| `HealthRecords` | IPFS health record log with vet access management |
+
+### PetCard tabs
+
+`Sell` · `Savings` · `Credit` · `✦ DNA` · `📋 Records` · `🔐 Guardian` · `❄ Stasis` · `🌍 Zone` · `🗺 Kiosk` · `🌈 Memorial`
+
+---
+
+## Subgraph
+
+AssemblyScript subgraph on The Graph indexes `PetMinted` events including the full `dna` field. Schema includes `Pet { id, owner, tokenURI, dna, createdAt }`.
+
+---
+
+## Getting Started
+
+### Contracts
+
+```bash
+cd contracts
+forge install
+forge build
+forge test
+```
+
+Deploy to Base:
+
+```bash
+DEPLOYER_PRIVATE_KEY=0x... forge script script/Deploy.s.sol \
+  --rpc-url https://mainnet.base.org --broadcast --verify
+```
+
+### Frontend
+
+```bash
+cd frontend
+cp .env.local.example .env.local
+# Fill in deployed contract addresses
+npm install
+npm run dev
+```
+
+---
+
+## Base Mainnet Addresses
+
+| Token | Address |
+|---|---|
+| USDC | `0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913` |
+| WETH | `0x4200000000000000000000000000000000000006` |
+| Aave v3 Pool | `0xA238Dd80C259a72e81d7e4664a9801593F98d1c5` |
+| aUSDC | `0x4e65fE4DbA92790696d040ac24Aa414708F5c0AB` |
+| aWETH | `0xD4a0e0b9149BCee3C920d2E00b5dE09138fd8bb7` |
+
+---
+
+## Disclaimer
+
+This repository is experimental software. Smart contracts are unaudited. Do not deposit funds you cannot afford to lose. This is not financial advice.
