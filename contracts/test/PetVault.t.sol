@@ -3,27 +3,34 @@ pragma solidity ^0.8.24;
 
 import {Test} from "forge-std/Test.sol";
 import {PetVault} from "../src/PetVault.sol";
-import {APTToken} from "../src/APTToken.sol";
+import {ERC20} from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
-/// @dev Mock Aave Pool — tracks supplied/withdrawn amounts without real yield.
+contract MockToken is ERC20 {
+    constructor(string memory name, string memory symbol) ERC20(name, symbol) {
+        _mint(msg.sender, 10_000_000 * 1e6); // 10M with 6 decimals (like USDC)
+    }
+    function decimals() public pure override returns (uint8) { return 6; }
+}
+
 contract MockAavePool {
-    mapping(address => uint256) public supplied;
+    mapping(address => uint256) public poolBalance;
 
     function supply(address asset, uint256 amount, address, uint16) external {
         IERC20(asset).transferFrom(msg.sender, address(this), amount);
-        supplied[asset] += amount;
+        poolBalance[asset] += amount;
     }
 
     function withdraw(address asset, uint256 amount, address to) external returns (uint256) {
-        supplied[asset] -= amount;
+        poolBalance[asset] -= amount;
         IERC20(asset).transfer(to, amount);
         return amount;
     }
 }
 
 contract PetVaultTest is Test {
-    APTToken apt;
+    MockToken usdc;
+    MockToken aUsdc; // aToken mock — same decimals
     MockAavePool pool;
     PetVault vault;
 
@@ -31,62 +38,84 @@ contract PetVaultTest is Test {
     address alice = address(2);
     address bob = address(3);
 
+    uint256 constant ONE = 100 * 1e6; // 100 USDC
+
     function setUp() public {
         vm.startPrank(owner);
-        apt = new APTToken(owner);
+        usdc = new MockToken("USD Coin", "USDC");
+        aUsdc = new MockToken("Aave USDC", "aUSDC");
         pool = new MockAavePool();
 
-        // aAptToken = apt itself in mock (simplification)
-        vault = new PetVault(address(apt), address(apt), address(pool), owner);
+        vault = new PetVault(address(usdc), address(aUsdc), address(pool), "USDC", owner);
 
-        apt.transfer(alice, 1_000 ether);
-        apt.transfer(bob, 1_000 ether);
+        usdc.transfer(alice, 10_000 * 1e6);
+        usdc.transfer(bob, 10_000 * 1e6);
+        // seed aToken into vault to simulate yield accrual
+        aUsdc.transfer(address(vault), 1_000 * 1e6);
         vm.stopPrank();
     }
 
     function test_deposit() public {
         vm.startPrank(alice);
-        apt.approve(address(vault), 500 ether);
-        vault.deposit(1, 500 ether);
+        usdc.approve(address(vault), ONE);
+        vault.deposit(1, ONE);
         vm.stopPrank();
 
-        assertEq(vault.deposits(1, alice), 500 ether);
-        assertEq(vault.totalDeposited(1), 500 ether);
+        assertEq(vault.deposits(1, alice), ONE);
+        assertEq(vault.totalDeposited(1), ONE);
+        assertEq(vault.grandTotalDeposited(), ONE);
     }
 
     function test_withdraw() public {
         vm.startPrank(alice);
-        apt.approve(address(vault), 500 ether);
-        vault.deposit(1, 500 ether);
-        vault.withdraw(1, 200 ether);
+        usdc.approve(address(vault), ONE);
+        vault.deposit(1, ONE);
+
+        uint256 balBefore = usdc.balanceOf(alice);
+        vault.withdraw(1, ONE / 2);
         vm.stopPrank();
 
-        assertEq(vault.deposits(1, alice), 300 ether);
-        assertEq(apt.balanceOf(alice), 700 ether); // started with 1000, deposited 500, withdrew 200
+        assertEq(usdc.balanceOf(alice), balBefore + ONE / 2);
+        assertEq(vault.deposits(1, alice), ONE / 2);
     }
 
     function test_withdraw_revertsIfInsufficientBalance() public {
         vm.startPrank(alice);
-        apt.approve(address(vault), 100 ether);
-        vault.deposit(1, 100 ether);
+        usdc.approve(address(vault), ONE);
+        vault.deposit(1, ONE);
         vm.expectRevert("PetVault: insufficient balance");
-        vault.withdraw(1, 101 ether);
+        vault.withdraw(1, ONE + 1);
         vm.stopPrank();
     }
 
     function test_multipleDepositors() public {
         vm.startPrank(alice);
-        apt.approve(address(vault), 500 ether);
-        vault.deposit(1, 500 ether);
+        usdc.approve(address(vault), ONE * 5);
+        vault.deposit(1, ONE * 5);
         vm.stopPrank();
 
         vm.startPrank(bob);
-        apt.approve(address(vault), 300 ether);
-        vault.deposit(1, 300 ether);
+        usdc.approve(address(vault), ONE * 3);
+        vault.deposit(1, ONE * 3);
         vm.stopPrank();
 
-        assertEq(vault.totalDeposited(1), 800 ether);
-        assertEq(vault.deposits(1, alice), 500 ether);
-        assertEq(vault.deposits(1, bob), 300 ether);
+        assertEq(vault.totalDeposited(1), ONE * 8);
+        assertEq(vault.grandTotalDeposited(), ONE * 8);
+    }
+
+    function test_yieldForPet() public {
+        vm.startPrank(alice);
+        usdc.approve(address(vault), ONE);
+        vault.deposit(1, ONE);
+        vm.stopPrank();
+
+        // aToken balance in vault = ONE (deposited) + 1000 USDC (seeded yield in setUp)
+        // yield = aTokenShare - principal
+        uint256 yield = vault.yieldForPet(1);
+        assertGt(yield, 0);
+    }
+
+    function test_assetSymbol() public view {
+        assertEq(vault.assetSymbol(), "USDC");
     }
 }

@@ -6,97 +6,91 @@ import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
-/// @notice Minimal Aave v3 Pool interface — only what we need.
 interface IAavePool {
     function supply(address asset, uint256 amount, address onBehalfOf, uint16 referralCode) external;
     function withdraw(address asset, uint256 amount, address to) external returns (uint256);
 }
 
-/// @notice Per-pet savings vault: deposit APT → supply to Aave → earn yield for vet bills.
-/// Each pet (tokenId) has its own balance; the owner can deposit/withdraw for their pet.
-/// Yield accrues automatically via Aave's aToken rebasing.
+/// @notice Per-pet savings vault: deposit a whitelisted token → supply to Aave v3 → earn yield.
+/// Deploy one instance per asset (e.g. USDC vault, WETH vault).
+/// Base mainnet addresses:
+///   USDC  0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913  aUSDC 0x4e65fE4DbA92790696d040ac24Aa414708F5c0AB
+///   WETH  0x4200000000000000000000000000000000000006  aWETH 0xD4a0e0b9149BCee3C920d2E00b5dE09138fd8bb7
+///   Aave v3 Pool 0xA238Dd80C259a72e81d7e4664a9801593F98d1c5
 contract PetVault is Ownable, ReentrancyGuard {
     using SafeERC20 for IERC20;
 
-    IERC20 public immutable aptToken;
-    IERC20 public immutable aAptToken;  // Aave aToken for APT (received when supplying)
+    IERC20 public immutable depositToken;   // USDC or WETH
+    IERC20 public immutable aToken;         // corresponding Aave aToken
     IAavePool public immutable aavePool;
+    string public assetSymbol;              // "USDC" or "WETH" — for frontend display
 
-    // Aave v3 Pool on Base mainnet
-    address public constant AAVE_POOL_BASE = 0xA238Dd80C259a72e81d7e4664a9801593F98d1c5;
-
-    // tokenId => depositor => shares (1:1 with APT at deposit time; yield accrues in aTokens)
+    // tokenId => depositor => principal deposited
     mapping(uint256 => mapping(address => uint256)) public deposits;
-    // tokenId => total APT deposited (not counting yield)
+    // tokenId => total principal across all depositors
     mapping(uint256 => uint256) public totalDeposited;
+    // grand total principal across all pets (tracked to avoid O(n) scans)
+    uint256 public grandTotalDeposited;
 
     event Deposited(uint256 indexed tokenId, address indexed depositor, uint256 amount);
     event Withdrawn(uint256 indexed tokenId, address indexed depositor, uint256 amount);
 
-    constructor(address _aptToken, address _aAptToken, address _aavePool, address _owner)
-        Ownable(_owner)
-    {
-        aptToken = IERC20(_aptToken);
-        aAptToken = IERC20(_aAptToken);
+    constructor(
+        address _depositToken,
+        address _aToken,
+        address _aavePool,
+        string memory _assetSymbol,
+        address _owner
+    ) Ownable(_owner) {
+        depositToken = IERC20(_depositToken);
+        aToken = IERC20(_aToken);
         aavePool = IAavePool(_aavePool);
+        assetSymbol = _assetSymbol;
     }
 
-    /// @notice Deposit APT into a pet's savings vault. Funds are immediately supplied to Aave.
-    /// @param tokenId The pet NFT token ID you are saving for.
-    /// @param amount  Amount of APT (in wei) to deposit.
+    /// @notice Deposit tokens into a pet's savings vault. Funds are immediately supplied to Aave.
     function deposit(uint256 tokenId, uint256 amount) external nonReentrant {
         require(amount > 0, "PetVault: amount must be > 0");
 
-        aptToken.safeTransferFrom(msg.sender, address(this), amount);
-        aptToken.approve(address(aavePool), amount);
-        aavePool.supply(address(aptToken), amount, address(this), 0);
+        depositToken.safeTransferFrom(msg.sender, address(this), amount);
+        depositToken.forceApprove(address(aavePool), amount);
+        aavePool.supply(address(depositToken), amount, address(this), 0);
 
         deposits[tokenId][msg.sender] += amount;
         totalDeposited[tokenId] += amount;
+        grandTotalDeposited += amount;
 
         emit Deposited(tokenId, msg.sender, amount);
     }
 
-    /// @notice Withdraw APT (principal only) from a pet's vault.
-    /// Yield above principal stays in the vault, accruing for future vet bills.
-    /// @param tokenId The pet NFT token ID.
-    /// @param amount  Amount of APT to withdraw (must be <= your deposit balance).
+    /// @notice Withdraw principal. Yield above principal stays in the vault accruing for vet bills.
     function withdraw(uint256 tokenId, uint256 amount) external nonReentrant {
         require(amount > 0, "PetVault: amount must be > 0");
         require(deposits[tokenId][msg.sender] >= amount, "PetVault: insufficient balance");
 
         deposits[tokenId][msg.sender] -= amount;
         totalDeposited[tokenId] -= amount;
+        grandTotalDeposited -= amount;
 
-        aavePool.withdraw(address(aptToken), amount, msg.sender);
+        aavePool.withdraw(address(depositToken), amount, msg.sender);
 
         emit Withdrawn(tokenId, msg.sender, amount);
     }
 
     /// @notice Total aToken balance held by this vault (principal + all accrued yield).
     function totalVaultBalance() external view returns (uint256) {
-        return aAptToken.balanceOf(address(this));
+        return aToken.balanceOf(address(this));
     }
 
-    /// @notice Accrued yield for a specific pet across all depositors.
-    /// yield = aToken balance proportional to pet's share - pet's principal
+    /// @notice Estimated yield accrued for a specific pet (proportional share of vault yield).
     function yieldForPet(uint256 tokenId) external view returns (uint256) {
-        uint256 total = aAptToken.balanceOf(address(this));
-        if (total == 0 || totalDeposited[tokenId] == 0) return 0;
+        if (grandTotalDeposited == 0 || totalDeposited[tokenId] == 0) return 0;
 
-        // Pet's proportional aToken share
-        uint256 grandTotal = _grandTotalDeposited();
-        if (grandTotal == 0) return 0;
+        uint256 vaultATokenBal = aToken.balanceOf(address(this));
+        uint256 petATokenShare = (vaultATokenBal * totalDeposited[tokenId]) / grandTotalDeposited;
 
-        uint256 petATokenShare = (total * totalDeposited[tokenId]) / grandTotal;
         return petATokenShare > totalDeposited[tokenId]
             ? petATokenShare - totalDeposited[tokenId]
             : 0;
-    }
-
-    function _grandTotalDeposited() internal view returns (uint256 total) {
-        // NOTE: In production, track this with a state variable for gas efficiency.
-        // This is a placeholder — subgraph or off-chain indexing is the right solution.
-        return aAptToken.balanceOf(address(this)); // approximation
     }
 }

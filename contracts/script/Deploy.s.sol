@@ -8,6 +8,13 @@ import {PetMarketplace} from "../src/PetMarketplace.sol";
 import {PetVault} from "../src/PetVault.sol";
 
 contract Deploy is Script {
+    // Base mainnet — Aave v3
+    address constant AAVE_POOL    = 0xA238Dd80C259a72e81d7e4664a9801593F98d1c5;
+    address constant USDC         = 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913;
+    address constant A_USDC       = 0x4e65fE4DbA92790696d040ac24Aa414708F5c0AB;
+    address constant WETH         = 0x4200000000000000000000000000000000000006;
+    address constant A_WETH       = 0xD4a0e0b9149BCee3C920d2E00b5dE09138fd8bb7;
+
     function run() external {
         uint256 deployerKey = vm.envUint("DEPLOYER_PRIVATE_KEY");
         address deployer = vm.addr(deployerKey);
@@ -15,24 +22,24 @@ contract Deploy is Script {
         vm.startBroadcast(deployerKey);
 
         APTToken apt = new APTToken(deployer);
-        console.log("APTToken deployed at:", address(apt));
+        console.log("APTToken    :", address(apt));
 
         PetNFT nft = new PetNFT(deployer);
-        console.log("PetNFT deployed at:", address(nft));
+        console.log("PetNFT      :", address(nft));
 
         PetMarketplace marketplace = new PetMarketplace(
             address(apt),
             address(nft),
-            deployer, // fee recipient — replace with multisig in production
+            deployer, // fee recipient — replace with multisig before mainnet
             deployer
         );
-        console.log("PetMarketplace deployed at:", address(marketplace));
+        console.log("Marketplace :", address(marketplace));
 
-        // aAPT token address on Base — update if APT gets listed on Aave
-        // For now deploy with a placeholder; wire up after Aave listing
-        address aAptToken = address(0); // TODO: replace with real aToken after APT Aave listing
-        PetVault vault = new PetVault(address(apt), aAptToken, PetVault.AAVE_POOL_BASE(), deployer);
-        console.log("PetVault deployed at:", address(vault));
+        PetVault usdcVault = new PetVault(USDC, A_USDC, AAVE_POOL, "USDC", deployer);
+        console.log("USDC Vault  :", address(usdcVault));
+
+        PetVault wethVault = new PetVault(WETH, A_WETH, AAVE_POOL, "WETH", deployer);
+        console.log("WETH Vault  :", address(wethVault));
 
         vm.stopBroadcast();
     }
