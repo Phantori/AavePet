@@ -1,0 +1,15 @@
+{
+  "name": "aavepet",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "frontend"
+  ],
+  "scripts": {
+    "dev": "yarn workspace frontend dev",
+    "build": "yarn workspace frontend build",
+    "test:contracts": "cd contracts && forge test",
+    "compile:contracts": "cd contracts && forge build"
+  },
+  "packageManager": "yarn@1.22.22"
+}

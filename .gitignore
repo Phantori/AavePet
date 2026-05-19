@@ -1,0 +1,27 @@
+# Dependencies
+node_modules/
+.yarn/
+
+# Build outputs
+out/
+cache/
+dist/
+.next/
+
+# Foundry
+contracts/out/
+contracts/cache/
+contracts/broadcast/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db

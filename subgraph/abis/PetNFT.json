@@ -1,0 +1,22 @@
+[
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true,  "name": "tokenId", "type": "uint256" },
+      { "indexed": true,  "name": "owner",   "type": "address" },
+      { "indexed": false, "name": "tokenURI","type": "string"  }
+    ],
+    "name": "PetMinted",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      { "indexed": true, "name": "from",    "type": "address" },
+      { "indexed": true, "name": "to",      "type": "address" },
+      { "indexed": true, "name": "tokenId", "type": "uint256" }
+    ],
+    "name": "Transfer",
+    "type": "event"
+  }
+]
