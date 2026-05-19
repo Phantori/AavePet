@@ -16,6 +16,7 @@ export const ADDRESSES = {
   guildCrest:        process.env.NEXT_PUBLIC_GUILD_CREST_ADDRESS        as `0x${string}`,
   stasisPod:         process.env.NEXT_PUBLIC_STASIS_POD_ADDRESS         as `0x${string}`,
   genesisCapsule:    process.env.NEXT_PUBLIC_GENESIS_CAPSULE_ADDRESS    as `0x${string}`,
+  merchantGlyph:     process.env.NEXT_PUBLIC_MERCHANT_GLYPH_ADDRESS     as `0x${string}`,
 } as const;
 
 export const PET_HERALDRY_ABI = [
@@ -930,5 +931,141 @@ export const GENESIS_CAPSULE_ABI = [
     stateMutability: "nonpayable",
     inputs: [{ name: "petNFT_", type: "address" }],
     outputs: [],
+  },
+] as const;
+
+export const MERCHANT_GLYPH_ABI = [
+  {
+    name: "deployKiosk",
+    type: "function",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "tokenId", type: "uint256" },
+      { name: "size", type: "uint8" },
+      { name: "lat", type: "int32" },
+      { name: "lon", type: "int32" },
+    ],
+    outputs: [],
+  },
+  {
+    name: "retractKiosk",
+    type: "function",
+    stateMutability: "nonpayable",
+    inputs: [{ name: "tokenId", type: "uint256" }],
+    outputs: [],
+  },
+  {
+    name: "checkInGuest",
+    type: "function",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "guestTokenId", type: "uint256" },
+      { name: "hostTokenId", type: "uint256" },
+    ],
+    outputs: [],
+  },
+  {
+    name: "checkOutGuest",
+    type: "function",
+    stateMutability: "nonpayable",
+    inputs: [{ name: "guestTokenId", type: "uint256" }],
+    outputs: [],
+  },
+  {
+    name: "syncWholesaleInventory",
+    type: "function",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "tokenId", type: "uint256" },
+      { name: "itemBatchId", type: "bytes32" },
+      { name: "amount", type: "uint256" },
+      { name: "vendor", type: "address" },
+    ],
+    outputs: [],
+  },
+  {
+    name: "setVendorApproval",
+    type: "function",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "vendor", type: "address" },
+      { name: "approved", type: "bool" },
+    ],
+    outputs: [],
+  },
+  {
+    name: "merchantGlyphs",
+    type: "function",
+    stateMutability: "view",
+    inputs: [{ name: "tokenId", type: "uint256" }],
+    outputs: [
+      { name: "size", type: "uint8" },
+      { name: "state", type: "uint8" },
+      { name: "lat", type: "int32" },
+      { name: "lon", type: "int32" },
+      { name: "lifetimeHospitality", type: "uint256" },
+      { name: "lastDeployAt", type: "uint256" },
+      { name: "activeGuests", type: "uint256" },
+    ],
+  },
+  {
+    name: "hospitalityBadge",
+    type: "function",
+    stateMutability: "view",
+    inputs: [{ name: "tokenId", type: "uint256" }],
+    outputs: [{ name: "", type: "uint256" }],
+  },
+  {
+    name: "inSanctuary",
+    type: "function",
+    stateMutability: "view",
+    inputs: [{ name: "tokenId", type: "uint256" }],
+    outputs: [{ name: "", type: "bool" }],
+  },
+  {
+    name: "sanctuaryHost",
+    type: "function",
+    stateMutability: "view",
+    inputs: [{ name: "guestTokenId", type: "uint256" }],
+    outputs: [{ name: "", type: "uint256" }],
+  },
+  {
+    name: "activeKioskCount",
+    type: "function",
+    stateMutability: "view",
+    inputs: [],
+    outputs: [{ name: "", type: "uint256" }],
+  },
+  {
+    name: "approvedVendors",
+    type: "function",
+    stateMutability: "view",
+    inputs: [{ name: "vendor", type: "address" }],
+    outputs: [{ name: "", type: "bool" }],
+  },
+  {
+    name: "getWholesalePurchases",
+    type: "function",
+    stateMutability: "view",
+    inputs: [{ name: "tokenId", type: "uint256" }],
+    outputs: [
+      {
+        name: "",
+        type: "tuple[]",
+        components: [
+          { name: "itemBatchId", type: "bytes32" },
+          { name: "amount", type: "uint256" },
+          { name: "timestamp", type: "uint256" },
+          { name: "vendor", type: "address" },
+        ],
+      },
+    ],
+  },
+  {
+    name: "badgeTitle",
+    type: "function",
+    stateMutability: "pure",
+    inputs: [{ name: "level", type: "uint256" }],
+    outputs: [{ name: "", type: "string" }],
   },
 ] as const;
