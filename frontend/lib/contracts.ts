@@ -12,6 +12,10 @@ export const ADDRESSES = {
   petGuardian:       process.env.NEXT_PUBLIC_PET_GUARDIAN_ADDRESS      as `0x${string}`,
   petRecords:        process.env.NEXT_PUBLIC_PET_RECORDS_ADDRESS       as `0x${string}`,
   packTreasury:      process.env.NEXT_PUBLIC_PACK_TREASURY_ADDRESS     as `0x${string}`,
+  weatherGlyph:      process.env.NEXT_PUBLIC_WEATHER_GLYPH_ADDRESS     as `0x${string}`,
+  guildCrest:        process.env.NEXT_PUBLIC_GUILD_CREST_ADDRESS        as `0x${string}`,
+  stasisPod:         process.env.NEXT_PUBLIC_STASIS_POD_ADDRESS         as `0x${string}`,
+  genesisCapsule:    process.env.NEXT_PUBLIC_GENESIS_CAPSULE_ADDRESS    as `0x${string}`,
 } as const;
 
 export const PET_HERALDRY_ABI = [
@@ -320,6 +324,23 @@ export const PET_NFT_ABI = [
   },
   {
     name: "tokenDNA",
+    type: "function",
+    stateMutability: "view",
+    inputs: [{ name: "tokenId", type: "uint256" }],
+    outputs: [{ name: "", type: "uint256" }],
+  },
+  {
+    name: "mintWithLineage",
+    type: "function",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "tokenURI_", type: "string" },
+      { name: "ancestorCapsuleId", type: "uint256" },
+    ],
+    outputs: [{ name: "tokenId", type: "uint256" }],
+  },
+  {
+    name: "ancestorTokenId",
     type: "function",
     stateMutability: "view",
     inputs: [{ name: "tokenId", type: "uint256" }],
@@ -635,5 +656,279 @@ export const PACK_TREASURY_ABI = [
     stateMutability: "view",
     inputs: [{ name: "packId", type: "bytes32" }],
     outputs: [{ name: "", type: "uint256" }],
+  },
+] as const;
+
+export const WEATHER_GLYPH_ABI = [
+  {
+    name: "configure",
+    type: "function",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "zone", type: "uint8" },
+      { name: "hemisphere", type: "uint8" },
+    ],
+    outputs: [],
+  },
+  {
+    name: "getConfig",
+    type: "function",
+    stateMutability: "view",
+    inputs: [{ name: "owner", type: "address" }],
+    outputs: [
+      { name: "zone", type: "uint8" },
+      { name: "hemisphere", type: "uint8" },
+      { name: "isSet", type: "bool" },
+    ],
+  },
+  {
+    name: "currentSeason",
+    type: "function",
+    stateMutability: "pure",
+    inputs: [
+      { name: "utcMonth", type: "uint8" },
+      { name: "hemisphere", type: "uint8" },
+    ],
+    outputs: [{ name: "", type: "uint8" }],
+  },
+] as const;
+
+export const GUILD_CREST_ABI = [
+  {
+    name: "createGuild",
+    type: "function",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "name", type: "string" },
+      { name: "packId", type: "bytes32" },
+    ],
+    outputs: [{ name: "guildId", type: "uint256" }],
+  },
+  {
+    name: "pledgeYield",
+    type: "function",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "guildId", type: "uint256" },
+      { name: "bps", type: "uint256" },
+    ],
+    outputs: [],
+  },
+  {
+    name: "sweepYield",
+    type: "function",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "tokenId", type: "uint256" },
+      { name: "depositor", type: "address" },
+      { name: "usdcVault", type: "address" },
+    ],
+    outputs: [],
+  },
+  {
+    name: "withdrawGuildFunds",
+    type: "function",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "guildId", type: "uint256" },
+      { name: "amount", type: "uint256" },
+      { name: "recipient", type: "address" },
+    ],
+    outputs: [],
+  },
+  {
+    name: "guilds",
+    type: "function",
+    stateMutability: "view",
+    inputs: [{ name: "guildId", type: "uint256" }],
+    outputs: [
+      { name: "name", type: "string" },
+      { name: "packId", type: "bytes32" },
+      { name: "founder", type: "address" },
+      { name: "treasuryUsdc", type: "uint256" },
+      { name: "memberCount", type: "uint256" },
+      { name: "createdAt", type: "uint256" },
+    ],
+  },
+  {
+    name: "memberGuild",
+    type: "function",
+    stateMutability: "view",
+    inputs: [{ name: "member", type: "address" }],
+    outputs: [{ name: "", type: "uint256" }],
+  },
+  {
+    name: "pledgeBps",
+    type: "function",
+    stateMutability: "view",
+    inputs: [{ name: "member", type: "address" }],
+    outputs: [{ name: "", type: "uint256" }],
+  },
+  {
+    name: "totalSwept",
+    type: "function",
+    stateMutability: "view",
+    inputs: [{ name: "guildId", type: "uint256" }],
+    outputs: [{ name: "", type: "uint256" }],
+  },
+  {
+    name: "guildCount",
+    type: "function",
+    stateMutability: "view",
+    inputs: [],
+    outputs: [{ name: "", type: "uint256" }],
+  },
+  {
+    name: "tokenURI",
+    type: "function",
+    stateMutability: "view",
+    inputs: [{ name: "guildId", type: "uint256" }],
+    outputs: [{ name: "", type: "string" }],
+  },
+] as const;
+
+export const STASIS_POD_ABI = [
+  {
+    name: "lockPet",
+    type: "function",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "tokenId", type: "uint256" },
+      { name: "plannedDuration", type: "uint256" },
+    ],
+    outputs: [],
+  },
+  {
+    name: "unlockPet",
+    type: "function",
+    stateMutability: "nonpayable",
+    inputs: [{ name: "tokenId", type: "uint256" }],
+    outputs: [],
+  },
+  {
+    name: "computePreservationFee",
+    type: "function",
+    stateMutability: "pure",
+    inputs: [
+      { name: "tokenId", type: "uint256" },
+      { name: "grossYield", type: "uint256" },
+    ],
+    outputs: [{ name: "fee", type: "uint256" }],
+  },
+  {
+    name: "getActivePods",
+    type: "function",
+    stateMutability: "view",
+    inputs: [{ name: "owner", type: "address" }],
+    outputs: [{ name: "active", type: "uint256[]" }],
+  },
+  {
+    name: "isInStasis",
+    type: "function",
+    stateMutability: "view",
+    inputs: [{ name: "tokenId", type: "uint256" }],
+    outputs: [{ name: "", type: "bool" }],
+  },
+  {
+    name: "stasisDuration",
+    type: "function",
+    stateMutability: "view",
+    inputs: [{ name: "tokenId", type: "uint256" }],
+    outputs: [{ name: "", type: "uint256" }],
+  },
+  {
+    name: "pods",
+    type: "function",
+    stateMutability: "view",
+    inputs: [{ name: "tokenId", type: "uint256" }],
+    outputs: [
+      { name: "owner", type: "address" },
+      { name: "lockedAt", type: "uint256" },
+      { name: "plannedDuration", type: "uint256" },
+      { name: "active", type: "bool" },
+    ],
+  },
+  {
+    name: "PRESERVATION_FEE_BPS",
+    type: "function",
+    stateMutability: "view",
+    inputs: [],
+    outputs: [{ name: "", type: "uint256" }],
+  },
+  {
+    name: "MIN_STASIS_DURATION",
+    type: "function",
+    stateMutability: "view",
+    inputs: [],
+    outputs: [{ name: "", type: "uint256" }],
+  },
+  {
+    name: "MAX_STASIS_DURATION",
+    type: "function",
+    stateMutability: "view",
+    inputs: [],
+    outputs: [{ name: "", type: "uint256" }],
+  },
+] as const;
+
+export const GENESIS_CAPSULE_ABI = [
+  {
+    name: "mintCapsule",
+    type: "function",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "to", type: "address" },
+      { name: "capsuleId", type: "uint256" },
+      { name: "dna", type: "uint256" },
+      { name: "lifetimeUsdcSaved", type: "uint256" },
+      { name: "charges", type: "uint256" },
+    ],
+    outputs: [],
+  },
+  {
+    name: "burn",
+    type: "function",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "from", type: "address" },
+      { name: "capsuleId", type: "uint256" },
+    ],
+    outputs: [],
+  },
+  {
+    name: "ancestors",
+    type: "function",
+    stateMutability: "view",
+    inputs: [{ name: "capsuleId", type: "uint256" }],
+    outputs: [
+      { name: "dna", type: "uint256" },
+      { name: "lifetimeUsdcSaved", type: "uint256" },
+      { name: "charges", type: "uint256" },
+      { name: "archivedAt", type: "uint256" },
+    ],
+  },
+  {
+    name: "balanceOf",
+    type: "function",
+    stateMutability: "view",
+    inputs: [
+      { name: "account", type: "address" },
+      { name: "id", type: "uint256" },
+    ],
+    outputs: [{ name: "", type: "uint256" }],
+  },
+  {
+    name: "uri",
+    type: "function",
+    stateMutability: "view",
+    inputs: [{ name: "id", type: "uint256" }],
+    outputs: [{ name: "", type: "string" }],
+  },
+  {
+    name: "setPetNFT",
+    type: "function",
+    stateMutability: "nonpayable",
+    inputs: [{ name: "petNFT_", type: "address" }],
+    outputs: [],
   },
 ] as const;

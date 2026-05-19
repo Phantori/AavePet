@@ -13,8 +13,10 @@ import { HeraldryCard } from "@/components/HeraldryCard";
 import { CipherReveal } from "@/components/CipherReveal";
 import { HealthRecords } from "@/components/HealthRecords";
 import { GuardianSetup } from "@/components/GuardianSetup";
+import { StasisPodManager } from "@/components/StasisPodManager";
+import { WeatherGlyphConfig } from "@/components/WeatherGlyphConfig";
 
-type Tab = "list" | "savings" | "credit" | "lineage" | "records" | "guardian" | "memorial";
+type Tab = "list" | "savings" | "credit" | "lineage" | "records" | "guardian" | "memorial" | "stasis" | "env";
 
 interface VaultRowProps {
   tokenId: bigint;
@@ -198,7 +200,7 @@ export function PetCard({ pet }: Props) {
 
         {/* Tab switcher */}
         <div className="flex gap-3 border-b border-gray-800 pb-2 flex-wrap">
-          {([["list", "Sell"], ["savings", "Savings"], ["credit", "Credit"], ["lineage", "✦ DNA"], ["records", "📋 Records"], ["guardian", "🔐 Guardian"], ["memorial", "🌈"]] as [Tab, string][]).map(([t, label]) => (
+          {([["list", "Sell"], ["savings", "Savings"], ["credit", "Credit"], ["lineage", "✦ DNA"], ["records", "📋 Records"], ["guardian", "🔐 Guardian"], ["stasis", "❄ Stasis"], ["env", "🌍 Zone"], ["memorial", "🌈"]] as [Tab, string][]).map(([t, label]) => (
             <button
               key={t}
               onClick={() => setTab(t)}
@@ -275,6 +277,14 @@ export function PetCard({ pet }: Props) {
         {tab === "records" && <HealthRecords tokenId={pet.tokenId} />}
 
         {tab === "guardian" && <GuardianSetup tokenId={pet.tokenId} />}
+
+        {tab === "stasis" && <StasisPodManager tokenId={pet.tokenId} />}
+
+        {tab === "env" && (
+          <div className="space-y-2">
+            <WeatherGlyphConfig />
+          </div>
+        )}
 
         {tab === "memorial" && (
           <div className="space-y-3">
