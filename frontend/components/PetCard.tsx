@@ -248,6 +248,13 @@ export function PetCard({ pet }: Props) {
               BioSpark DNA — immutable traits encoded at mint. Click the card to reveal the Coat of Arms.
             </p>
             <HeraldryCard pet={pet} />
+            <a
+              href={`/heraldry/${pet.tokenId.toString()}`}
+              className="block text-center text-xs text-brand-400 hover:underline mt-1"
+              onClick={(e) => e.stopPropagation()}
+            >
+              View full-screen heraldry ↗
+            </a>
           </div>
         )}
 
