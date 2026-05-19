@@ -17,6 +17,7 @@ import {WeatherGlyph} from "../src/WeatherGlyph.sol";
 import {GuildCrest} from "../src/GuildCrest.sol";
 import {StasisPod} from "../src/StasisPod.sol";
 import {GenesisCapsule} from "../src/GenesisCapsule.sol";
+import {MerchantGlyph} from "../src/MerchantGlyph.sol";
 
 contract Deploy is Script {
     // Base mainnet — Aave v3
@@ -92,6 +93,11 @@ contract Deploy is Script {
 
         GenesisCapsule genesisCapsule = new GenesisCapsule(address(bridge), deployer);
         console.log("GenesisCapsule   :", address(genesisCapsule));
+
+        MerchantGlyph merchantGlyph = new MerchantGlyph(
+            address(nft), address(usdcVault), USDC, deployer
+        );
+        console.log("MerchantGlyph    :", address(merchantGlyph));
 
         // Wire up cross-contract references
         bridge.setGenesisCapsule(address(genesisCapsule));

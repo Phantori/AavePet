@@ -15,8 +15,9 @@ import { HealthRecords } from "@/components/HealthRecords";
 import { GuardianSetup } from "@/components/GuardianSetup";
 import { StasisPodManager } from "@/components/StasisPodManager";
 import { WeatherGlyphConfig } from "@/components/WeatherGlyphConfig";
+import { MerchantGlyphPanel } from "@/components/MerchantGlyphPanel";
 
-type Tab = "list" | "savings" | "credit" | "lineage" | "records" | "guardian" | "memorial" | "stasis" | "env";
+type Tab = "list" | "savings" | "credit" | "lineage" | "records" | "guardian" | "memorial" | "stasis" | "env" | "kiosk";
 
 interface VaultRowProps {
   tokenId: bigint;
@@ -200,7 +201,7 @@ export function PetCard({ pet }: Props) {
 
         {/* Tab switcher */}
         <div className="flex gap-3 border-b border-gray-800 pb-2 flex-wrap">
-          {([["list", "Sell"], ["savings", "Savings"], ["credit", "Credit"], ["lineage", "✦ DNA"], ["records", "📋 Records"], ["guardian", "🔐 Guardian"], ["stasis", "❄ Stasis"], ["env", "🌍 Zone"], ["memorial", "🌈"]] as [Tab, string][]).map(([t, label]) => (
+          {([["list", "Sell"], ["savings", "Savings"], ["credit", "Credit"], ["lineage", "✦ DNA"], ["records", "📋 Records"], ["guardian", "🔐 Guardian"], ["stasis", "❄ Stasis"], ["env", "🌍 Zone"], ["kiosk", "🗺 Kiosk"], ["memorial", "🌈"]] as [Tab, string][]).map(([t, label]) => (
             <button
               key={t}
               onClick={() => setTab(t)}
@@ -285,6 +286,8 @@ export function PetCard({ pet }: Props) {
             <WeatherGlyphConfig />
           </div>
         )}
+
+        {tab === "kiosk" && <MerchantGlyphPanel tokenId={pet.tokenId} />}
 
         {tab === "memorial" && (
           <div className="space-y-3">
