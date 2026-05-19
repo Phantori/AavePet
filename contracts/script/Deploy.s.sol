@@ -10,6 +10,9 @@ import {RainbowBridge} from "../src/RainbowBridge.sol";
 import {ServiceMarketplace} from "../src/ServiceMarketplace.sol";
 import {PetCreditLine} from "../src/PetCreditLine.sol";
 import {PetHeraldry} from "../src/PetHeraldry.sol";
+import {PetGuardian} from "../src/PetGuardian.sol";
+import {PetRecords} from "../src/PetRecords.sol";
+import {PackTreasury} from "../src/PackTreasury.sol";
 
 contract Deploy is Script {
     // Base mainnet — Aave v3
@@ -64,6 +67,15 @@ contract Deploy is Script {
             address(creditLine)
         );
         console.log("PetHeraldry      :", address(heraldry));
+
+        PetGuardian guardian = new PetGuardian(address(nft));
+        console.log("PetGuardian      :", address(guardian));
+
+        PetRecords records = new PetRecords(address(nft));
+        console.log("PetRecords       :", address(records));
+
+        PackTreasury packTreasury = new PackTreasury(USDC, A_USDC, AAVE_POOL, address(heraldry));
+        console.log("PackTreasury     :", address(packTreasury));
 
         vm.stopBroadcast();
     }

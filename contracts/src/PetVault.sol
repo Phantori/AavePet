@@ -32,8 +32,12 @@ contract PetVault is Ownable, ReentrancyGuard {
     // grand total principal across all pets (tracked to avoid O(n) scans)
     uint256 public grandTotalDeposited;
 
+    // tokenId => depositor => guardian contract authorised to withdraw on their behalf
+    mapping(uint256 => mapping(address => address)) public authorizedGuardian;
+
     event Deposited(uint256 indexed tokenId, address indexed depositor, uint256 amount);
     event Withdrawn(uint256 indexed tokenId, address indexed depositor, uint256 amount);
+    event GuardianSet(uint256 indexed tokenId, address indexed depositor, address guardian);
 
     constructor(
         address _depositToken,
@@ -75,6 +79,49 @@ contract PetVault is Ownable, ReentrancyGuard {
         aavePool.withdraw(address(depositToken), amount, msg.sender);
 
         emit Withdrawn(tokenId, msg.sender, amount);
+    }
+
+    /// @notice Register a guardian contract that is allowed to withdraw on behalf of the depositor.
+    /// @param tokenId          The pet NFT token ID.
+    /// @param guardianContract The PetGuardian contract address (or address(0) to clear).
+    function setGuardian(uint256 tokenId, address guardianContract) external {
+        authorizedGuardian[tokenId][msg.sender] = guardianContract;
+        emit GuardianSet(tokenId, msg.sender, guardianContract);
+    }
+
+    /// @notice Guardian-initiated withdrawal. Sends funds to a recipient chosen by the guardian.
+    /// The guardian contract must have been pre-registered by the depositor via setGuardian().
+    /// Passing type(uint256).max withdraws the depositor's full principal balance.
+    /// @param tokenId   The pet NFT token ID.
+    /// @param depositor The original depositor whose balance is being withdrawn.
+    /// @param recipient The address that should receive the withdrawn tokens.
+    /// @param amount    Amount to withdraw, or type(uint256).max for full balance.
+    function guardianWithdraw(
+        uint256 tokenId,
+        address depositor,
+        address recipient,
+        uint256 amount
+    ) external nonReentrant {
+        require(
+            msg.sender == authorizedGuardian[tokenId][depositor],
+            "PetVault: caller is not authorized guardian"
+        );
+        require(recipient != address(0), "PetVault: invalid recipient");
+
+        uint256 balance = deposits[tokenId][depositor];
+        if (amount == type(uint256).max) {
+            amount = balance;
+        }
+        require(amount > 0, "PetVault: amount must be > 0");
+        require(balance >= amount, "PetVault: insufficient balance");
+
+        deposits[tokenId][depositor] -= amount;
+        totalDeposited[tokenId]      -= amount;
+        grandTotalDeposited          -= amount;
+
+        aavePool.withdraw(address(depositToken), amount, recipient);
+
+        emit Withdrawn(tokenId, depositor, amount);
     }
 
     /// @notice Total aToken balance held by this vault (principal + all accrued yield).

@@ -4,6 +4,7 @@ pragma solidity ^0.8.24;
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {BioSparkDNA} from "./lib/BioSparkDNA.sol";
 import {HeraldryRenderer} from "./lib/HeraldryRenderer.sol";
+import {CipherRunes} from "./lib/CipherRunes.sol";
 
 interface IPetNFT {
     function ownerOf(uint256 tokenId) external view returns (address);
@@ -130,6 +131,16 @@ contract PetHeraldry is Ownable {
         require(packFounder[packId] != address(0), "PetHeraldry: pack not found");
         packOf[msg.sender] = packId;
         emit PackJoined(packId, msg.sender);
+    }
+
+    // ── Rune name ─────────────────────────────────────────────────────────────
+
+    /// @notice Return the 40-rune secret name derived from a pet's on-chain DNA.
+    /// @param tokenId The pet NFT token ID.
+    /// @return        The 40-rune string (120 UTF-8 bytes).
+    function getRuneName(uint256 tokenId) external view returns (string memory) {
+        uint256 dna = petNFT.tokenDNA(tokenId);
+        return CipherRunes.getRuneName(dna);
     }
 
     // ── Admin ─────────────────────────────────────────────────────────────────

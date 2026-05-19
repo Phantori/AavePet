@@ -10,8 +10,11 @@ import {
 import { CreditLine } from "@/components/CreditLine";
 import { RainbowBridgeModal } from "@/components/RainbowBridgeModal";
 import { HeraldryCard } from "@/components/HeraldryCard";
+import { CipherReveal } from "@/components/CipherReveal";
+import { HealthRecords } from "@/components/HealthRecords";
+import { GuardianSetup } from "@/components/GuardianSetup";
 
-type Tab = "list" | "savings" | "credit" | "lineage" | "memorial";
+type Tab = "list" | "savings" | "credit" | "lineage" | "records" | "guardian" | "memorial";
 
 interface VaultRowProps {
   tokenId: bigint;
@@ -129,6 +132,18 @@ function VaultRow({ tokenId, vaultAddress, tokenAddress, symbol, decimals }: Vau
   );
 }
 
+// Reads tokenDNA then delegates to CipherReveal — avoids prop-drilling bigint from parent
+function CipherRevealLoader({ tokenId }: { tokenId: bigint }) {
+  const { data: dna } = useReadContract({
+    address: ADDRESSES.petNFT,
+    abi: PET_NFT_ABI,
+    functionName: "tokenDNA",
+    args: [tokenId],
+  });
+  if (dna === undefined) return <p className="text-xs text-gray-600 text-center">Loading DNA…</p>;
+  return <CipherReveal dna={dna} />;
+}
+
 interface Props {
   pet: OwnedPet;
 }
@@ -183,7 +198,7 @@ export function PetCard({ pet }: Props) {
 
         {/* Tab switcher */}
         <div className="flex gap-3 border-b border-gray-800 pb-2 flex-wrap">
-          {([["list", "Sell"], ["savings", "Savings"], ["credit", "Credit"], ["lineage", "✦ DNA"], ["memorial", "🌈"]] as [Tab, string][]).map(([t, label]) => (
+          {([["list", "Sell"], ["savings", "Savings"], ["credit", "Credit"], ["lineage", "✦ DNA"], ["records", "📋 Records"], ["guardian", "🔐 Guardian"], ["memorial", "🌈"]] as [Tab, string][]).map(([t, label]) => (
             <button
               key={t}
               onClick={() => setTab(t)}
@@ -243,20 +258,23 @@ export function PetCard({ pet }: Props) {
         {tab === "credit" && <CreditLine tokenId={pet.tokenId} />}
 
         {tab === "lineage" && (
-          <div className="space-y-2">
-            <p className="text-xs text-gray-500">
-              BioSpark DNA — immutable traits encoded at mint. Click the card to reveal the Coat of Arms.
-            </p>
+          <div className="space-y-3">
             <HeraldryCard pet={pet} />
             <a
               href={`/heraldry/${pet.tokenId.toString()}`}
-              className="block text-center text-xs text-brand-400 hover:underline mt-1"
+              className="block text-center text-xs text-brand-400 hover:underline"
               onClick={(e) => e.stopPropagation()}
             >
               View full-screen heraldry ↗
             </a>
+            {/* Cipher reveal below the card */}
+            <CipherRevealLoader tokenId={pet.tokenId} />
           </div>
         )}
+
+        {tab === "records" && <HealthRecords tokenId={pet.tokenId} />}
+
+        {tab === "guardian" && <GuardianSetup tokenId={pet.tokenId} />}
 
         {tab === "memorial" && (
           <div className="space-y-3">

@@ -9,6 +9,9 @@ export const ADDRESSES = {
   serviceMarketplace:process.env.NEXT_PUBLIC_SERVICE_MARKETPLACE_ADDRESS as `0x${string}`,
   petCreditLine:     process.env.NEXT_PUBLIC_PET_CREDIT_LINE_ADDRESS   as `0x${string}`,
   petHeraldry:       process.env.NEXT_PUBLIC_PET_HERALDRY_ADDRESS      as `0x${string}`,
+  petGuardian:       process.env.NEXT_PUBLIC_PET_GUARDIAN_ADDRESS      as `0x${string}`,
+  petRecords:        process.env.NEXT_PUBLIC_PET_RECORDS_ADDRESS       as `0x${string}`,
+  packTreasury:      process.env.NEXT_PUBLIC_PACK_TREASURY_ADDRESS     as `0x${string}`,
 } as const;
 
 export const PET_HERALDRY_ABI = [
@@ -406,5 +409,231 @@ export const PET_VAULT_ABI = [
     stateMutability: "view",
     inputs: [],
     outputs: [{ name: "", type: "string" }],
+  },
+  {
+    name: "setGuardian",
+    type: "function",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "tokenId", type: "uint256" },
+      { name: "guardianContract", type: "address" },
+    ],
+    outputs: [],
+  },
+] as const;
+
+export const PET_GUARDIAN_ABI = [
+  {
+    name: "setupGuardians",
+    type: "function",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "tokenId", type: "uint256" },
+      { name: "guardians", type: "address[3]" },
+      { name: "threshold", type: "uint8" },
+      { name: "inactivityPeriod", type: "uint256" },
+    ],
+    outputs: [],
+  },
+  {
+    name: "pingAlive",
+    type: "function",
+    stateMutability: "nonpayable",
+    inputs: [{ name: "tokenId", type: "uint256" }],
+    outputs: [],
+  },
+  {
+    name: "approveEmergency",
+    type: "function",
+    stateMutability: "nonpayable",
+    inputs: [{ name: "tokenId", type: "uint256" }],
+    outputs: [],
+  },
+  {
+    name: "executeEmergency",
+    type: "function",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "tokenId", type: "uint256" },
+      { name: "usdcVault", type: "address" },
+      { name: "wethVault", type: "address" },
+      { name: "recipient", type: "address" },
+    ],
+    outputs: [],
+  },
+  {
+    name: "configs",
+    type: "function",
+    stateMutability: "view",
+    inputs: [{ name: "tokenId", type: "uint256" }],
+    outputs: [
+      { name: "guardians", type: "address[3]" },
+      { name: "threshold", type: "uint8" },
+      { name: "inactivityPeriod", type: "uint256" },
+      { name: "lastActivity", type: "uint256" },
+      { name: "active", type: "bool" },
+    ],
+  },
+  {
+    name: "isInactive",
+    type: "function",
+    stateMutability: "view",
+    inputs: [{ name: "tokenId", type: "uint256" }],
+    outputs: [{ name: "", type: "bool" }],
+  },
+  {
+    name: "approvalCount",
+    type: "function",
+    stateMutability: "view",
+    inputs: [{ name: "tokenId", type: "uint256" }],
+    outputs: [{ name: "", type: "uint256" }],
+  },
+] as const;
+
+export const PET_RECORDS_ABI = [
+  {
+    name: "addRecord",
+    type: "function",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "tokenId", type: "uint256" },
+      { name: "cid", type: "string" },
+      { name: "recordType", type: "string" },
+    ],
+    outputs: [],
+  },
+  {
+    name: "grantAccess",
+    type: "function",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "tokenId", type: "uint256" },
+      { name: "vet", type: "address" },
+    ],
+    outputs: [],
+  },
+  {
+    name: "revokeAccess",
+    type: "function",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "tokenId", type: "uint256" },
+      { name: "vet", type: "address" },
+    ],
+    outputs: [],
+  },
+  {
+    name: "getRecords",
+    type: "function",
+    stateMutability: "view",
+    inputs: [{ name: "tokenId", type: "uint256" }],
+    outputs: [
+      {
+        name: "",
+        type: "tuple[]",
+        components: [
+          { name: "cid", type: "string" },
+          { name: "recordType", type: "string" },
+          { name: "timestamp", type: "uint256" },
+          { name: "addedBy", type: "address" },
+        ],
+      },
+    ],
+  },
+  {
+    name: "hasAccess",
+    type: "function",
+    stateMutability: "view",
+    inputs: [
+      { name: "tokenId", type: "uint256" },
+      { name: "who", type: "address" },
+    ],
+    outputs: [{ name: "", type: "bool" }],
+  },
+  {
+    name: "recordCount",
+    type: "function",
+    stateMutability: "view",
+    inputs: [{ name: "tokenId", type: "uint256" }],
+    outputs: [{ name: "", type: "uint256" }],
+  },
+] as const;
+
+export const PACK_TREASURY_ABI = [
+  {
+    name: "deposit",
+    type: "function",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "packId", type: "bytes32" },
+      { name: "amount", type: "uint256" },
+    ],
+    outputs: [],
+  },
+  {
+    name: "withdraw",
+    type: "function",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "packId", type: "bytes32" },
+      { name: "amount", type: "uint256" },
+    ],
+    outputs: [],
+  },
+  {
+    name: "fileClaim",
+    type: "function",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "packId", type: "bytes32" },
+      { name: "recipient", type: "address" },
+      { name: "amount", type: "uint256" },
+      { name: "reason", type: "string" },
+    ],
+    outputs: [{ name: "claimId", type: "uint256" }],
+  },
+  {
+    name: "voteClaim",
+    type: "function",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "packId", type: "bytes32" },
+      { name: "claimId", type: "uint256" },
+    ],
+    outputs: [],
+  },
+  {
+    name: "executeClaim",
+    type: "function",
+    stateMutability: "nonpayable",
+    inputs: [
+      { name: "packId", type: "bytes32" },
+      { name: "claimId", type: "uint256" },
+    ],
+    outputs: [],
+  },
+  {
+    name: "treasuryDeposited",
+    type: "function",
+    stateMutability: "view",
+    inputs: [{ name: "packId", type: "bytes32" }],
+    outputs: [{ name: "", type: "uint256" }],
+  },
+  {
+    name: "memberDeposit",
+    type: "function",
+    stateMutability: "view",
+    inputs: [
+      { name: "packId", type: "bytes32" },
+      { name: "member", type: "address" },
+    ],
+    outputs: [{ name: "", type: "uint256" }],
+  },
+  {
+    name: "treasuryYield",
+    type: "function",
+    stateMutability: "view",
+    inputs: [{ name: "packId", type: "bytes32" }],
+    outputs: [{ name: "", type: "uint256" }],
   },
 ] as const;
