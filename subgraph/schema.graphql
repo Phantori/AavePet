@@ -1,0 +1,58 @@
+type Pet @entity {
+  id: ID!                    # tokenId as string
+  tokenId: BigInt!
+  owner: Bytes!              # current owner address
+  creator: Bytes!            # original minter
+  tokenURI: String!
+  mintedAt: BigInt!          # block timestamp
+  listing: Listing           # active listing, if any
+  usdcDeposits: [VaultDeposit!]! @derivedFrom(field: "pet")
+  wethDeposits: [VaultDeposit!]! @derivedFrom(field: "pet")
+  sales: [Sale!]!            @derivedFrom(field: "pet")
+}
+
+type Listing @entity {
+  id: ID!                    # tokenId as string (one active listing per token)
+  pet: Pet!
+  seller: Bytes!
+  price: BigInt!             # in APT (wei)
+  active: Boolean!
+  listedAt: BigInt!
+  delistedAt: BigInt
+}
+
+type Sale @entity {
+  id: ID!                    # txHash-logIndex
+  pet: Pet!
+  seller: Bytes!
+  buyer: Bytes!
+  price: BigInt!
+  timestamp: BigInt!
+}
+
+type VaultDeposit @entity {
+  id: ID!                    # txHash-logIndex
+  pet: Pet!
+  depositor: Bytes!
+  asset: String!             # "USDC" or "WETH"
+  amount: BigInt!
+  timestamp: BigInt!
+}
+
+type VaultWithdrawal @entity {
+  id: ID!
+  pet: Pet!
+  depositor: Bytes!
+  asset: String!
+  amount: BigInt!
+  timestamp: BigInt!
+}
+
+# Aggregate stats
+type Protocol @entity {
+  id: ID!                    # singleton: "protocol"
+  totalPetsMinted: BigInt!
+  totalVolume: BigInt!       # total APT traded
+  totalUsdcSaved: BigInt!
+  totalWethSaved: BigInt!
+}
